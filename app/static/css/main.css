@@ -1,0 +1,45 @@
+body {
+    width: 100%;
+    min-height: 100vh;
+}
+
+body {
+    font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+}
+
+footer {
+    background-color: orange;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: #222222;
+}
+  
+footer p {
+    font-size: 18px;
+    margin: 0;
+    padding-top: 30px;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+.column #button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.column img {
+    display:block;
+    margin:auto;
+}

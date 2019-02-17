@@ -24,7 +24,8 @@ def get_plot(imdbID):
         plot (string): full plot for the movie
     """
     response = requests.get("{}i={}&plot=full".format(DATA_API, imdbID))
-    return response.json()['Plot'] if response.status_code == 200 else None 
+    #return response.json()['Plot'] if response.status_code == 200 else None 
+    return response.json()
 
 def get_poster(imdbID):
     """

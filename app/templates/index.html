@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Real Fake Posters</title>
+
+  <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+
+  <link href="/static/css/main.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    function fileUpload() {
+      document.getElementById("file").click();
+    };
+  </script>
+  <script src="/static/js/main.js"></script>
+</head>
+
+<body>
+
+  <div class="row">
+      <div class="column">
+          <img src="/static/img/default.jpeg">
+          <form id="newImage" action="/" method="POST" enctype="multipart/form-data">
+            <input type="file" id="file" name="file" style="display:none;" />
+          </form>
+          <div id="button-container">
+            <button onclick="fileUpload();">Upload</button>
+          </div>
+      </div>
+      <div class="column">
+        <p>Title: Wingardiam leviosa</p>
+        <p>Plot: Duis non metus tortor. Donec venenatis consequat justo sit amet laoreet. Nunc aliquam condimentum turpis quis dictum. Aliquam dapibus varius mauris, ut ullamcorper lorem. Nulla ipsum purus, laoreet in convallis a, varius in est. Praesent feugiat eget odio sed sollicitudin. Curabitur blandit gravida quam et sollicitudin. Vivamus augue leo, consequat vel turpis vel, aliquet convallis ligula.</p>
+      </div>
+  </div>
+  
+  <footer>
+      <p>&copy; Real Fake Posters 2019. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
