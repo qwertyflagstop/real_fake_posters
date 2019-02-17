@@ -5,9 +5,6 @@ Entry point for web app
 from flask import (request, render_template, flash,
                    send_from_directory, abort)
 from . import APP, rnn
-import sys
-sys.path.append("..")
-import models2
 
 DEFAULT_PLOT = "Once upon a time... there was a lad"
 
