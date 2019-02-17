@@ -59,9 +59,18 @@ def index():
     #file.save(os.path.join(APP.config['UPLOAD_FOLDER'], filename))
     file.seek(0)
     file_raw = file.read()
+    title, plot = generate_plot_and_title(file_raw)
     base64_file = base64.b64encode(file_raw)
-    return render_template('index.html', title=DEFAULT_TITLE, plot=DEFAULT_PLOT, img_data=base64_file.decode())
+    return render_template('index.html', title=title, plot=plot, img_data=base64_file.decode())
 
 
 def default_page():
     return render_template('index.html', title=DEFAULT_TITLE, plot=DEFAULT_PLOT)
+
+
+def generate_plot_and_title(file_raw):
+
+    # do network stuff
+
+    # replace these values with the generated ones
+    return DEFAULT_TITLE, DEFAULT_PLOT
