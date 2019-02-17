@@ -3,10 +3,15 @@
 Entry point for web app
 """
 import os
+import base64
 from flask import (request, render_template, flash,
                    send_from_directory, abort)
 from werkzeug.utils import secure_filename
 from . import APP, ALLOWED_EXTENSIONS
+
+DEFAULT_TITLE = "Your Title Here"
+DEFAULT_PLOT = "Once upon a time... there was a lad"
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -38,19 +43,25 @@ def index():
         description (string) (POST): Post parameter for movie description 
     """
     if request.method == 'GET':
-        return render_template('index.html')
+        return default_page()
     
     if 'file' not in request.files:
         flash('No file part')
-        return render_template('index.html')
+        return default_page()
 
     file = request.files['file']
 
     if not allowed_file(file.filename):
         flash('Extension not allowed')
-        return render_template('index.html')
+        return default_page()
 
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(APP.config['UPLOAD_FOLDER'], filename))
-    
-    return render_template('index.html')
+    #filename = secure_filename(file.filename)
+    #file.save(os.path.join(APP.config['UPLOAD_FOLDER'], filename))
+    file.seek(0)
+    file_raw = file.read()
+    base64_file = base64.b64encode(file_raw)
+    return render_template('index.html', title=DEFAULT_TITLE, plot=DEFAULT_PLOT, img_data=base64_file.decode())
+
+
+def default_page():
+    return render_template('index.html', title=DEFAULT_TITLE, plot=DEFAULT_PLOT)
