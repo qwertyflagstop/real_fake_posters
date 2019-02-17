@@ -1,9 +1,7 @@
 body {
+    margin: 0;
     width: 100%;
     min-height: 100vh;
-}
-
-body {
     font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
 }
 
@@ -41,13 +39,35 @@ header p {
     padding-top: 15px;
 }
 
+#button-container {
+    padding-top: 10px;
+}
+
+#button-container button {
+    background-color: white;
+    color: black;
+    border: 2px solid black; /* Green */
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    padding: 8px 18px;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 25px;
+}
+
+#button-container button:hover {
+    background-color: black; /* Green */
+    color: white;
+    cursor: pointer;
+}
+
 .row {
     display: flex;
     margin: 0 auto;
 }
 
 .main-row {
-    margin-top: 20%;
+    margin-top: 10%;
 }
 
 .column {
@@ -73,8 +93,8 @@ header p {
 }
 
 #poster {
-    max-width: 400px;
-    max-height: 600px;
+    max-width: 200px;
+    max-height: 350px;
 }
 
 .bold {
