@@ -41,7 +41,8 @@ def index():
         return default_page()
     
     level = request.form['range']
-    level = float(level / 100.0)
+    level = float(level) / 100.0
+    print(level)
     plot = rnn.get_a_plot(level)
     return render_template('index.html', plot=plot)
 
