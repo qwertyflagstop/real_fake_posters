@@ -1,2 +1,2 @@
-# real_fake_posters
-Real fake posters .com
+# real_fake_plots
+Real fake plots .com
