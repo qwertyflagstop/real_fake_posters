@@ -59,10 +59,13 @@ class TextFile(object):
     def indexes_to_string(self, hots):
         return ''.join([self.token_list[x] for x in hots])
 
+    def index_to_char(self, index):
+        return self.token_list[index]
+
 
 class CharRNN(object):
 
-    def __init__(self, name, vocab_size, batch_size, sequence_length=None, temperature=1.0):
+    def __init__(self, name, vocab_size, batch_size, tf, sequence_length=None, temperature=1.0):
         super(CharRNN, self).__init__()
         self.is_stateful = True
         self.name = name
@@ -72,6 +75,7 @@ class CharRNN(object):
         self.model = self.make_train_model(self.batch_size)
         self.pred_model = self.make_pred_model(1)
         self.temp = temperature
+        self.tf = tf
 
     def make_train_model(self, batch_size):
         model = Sequential()
@@ -117,13 +121,41 @@ class CharRNN(object):
         a = np.exp(a) / np.sum(np.exp(a))
         return np.random.choice(a.shape[0], p=a)
 
+    def get_a_plot(self, temperature=0.9, max_chars=1024):
+        temperature = max(temperature,0.3)
+        self.temp = temperature
+        rows = np.random.randint(0, self.tf.vocab_size - 1, size=(1, 1))
+        while True:
+            plot = ''
+            while True:
+                next_row_index = self.sample_softmax(np.squeeze(self.pred_model.predict(rows), 0)[0], self.temp)
+                next_row_char = self.tf.index_to_char(next_row_index)
+                rows = np.array([next_row_index]).reshape((1, 1))
+                plot += next_row_char
+                if next_row_char=='\n':
+                    break
+                if len(plot) > max_chars:
+                    return plot
+            plot = ''
+            while True:
+                next_row_index = self.sample_softmax(np.squeeze(self.pred_model.predict(rows), 0)[0], self.temp)
+                next_row_char = self.tf.index_to_char(next_row_index)
+                rows = np.array([next_row_index]).reshape((1, 1))
+                plot += next_row_char
+                if next_row_char == '\n':
+                    break
+                if len(plot) > max_chars:
+                    return plot
+            if not('N/A' in plot):
+                break
+        return plot
+
     def sample(self, tf, length, out_fp=None):
         sampled_hots = []
         self.pred_model.set_weights(self.model.get_weights())
         self.pred_model.reset_states()
         rows = np.random.randint(0,tf.vocab_size-1,size=(1,1))
         b = Progbar(length)
-        print('Generating Text')
         for i in np.arange(0, length):
             next_row_index = self.sample_softmax(np.squeeze(self.pred_model.predict(rows), 0)[0], self.temp)
             sampled_hots.append(next_row_index)
@@ -142,6 +174,7 @@ class CharRNN(object):
 
     def load_models(self):
         self.model.load_weights('models/{}_weights.h5'.format(self.name))
+        self.pred_model.set_weights(self.model.get_weights())
         print('Loaded weights for prefix {}'.format(self.name))
 
 
@@ -149,9 +182,12 @@ if __name__ == '__main__':
     t_file = TextFile('plots.txt')
     import os
     n = os.path.basename(t_file.fp).replace('.txt','')
-    rnn = CharRNN(n,t_file.vocab_size,512,128,0.9)
+    rnn = CharRNN(n,t_file.vocab_size,512, t_file,128,0.9)
     logger = Logger()
     print(rnn.model.summary())
     rnn.load_models()
-    rnn.sample(t_file,4096)
-    #rnn.train_lstm(t_file,logger)
+    print(rnn.get_a_plot(0.99))
+    print(rnn.get_a_plot(0.8))
+    print(rnn.get_a_plot(0.6))
+    print(rnn.get_a_plot(0.4))
+    print(rnn.get_a_plot(0.3))
