@@ -8,6 +8,10 @@ import time
 import numpy as np
 from omdb import get_plot, get_poster
 import random
+import requests
+import shutil
+from matplotlib import pyplot as plt
+from PIL import Image
 
 def fetch_poster(queue, lock, w_id):
     global ids
@@ -16,18 +20,15 @@ def fetch_poster(queue, lock, w_id):
     global tt_index
     while True:
         lock.acquire()
-        # if index >= len(ids):
-        #     worker_count -= 1
-        #     lock.release()
-        #     return
-        i = tt_index
-        tt_index += 1
+        if index >= len(ids):
+            worker_count -= 1
+            lock.release()
+            return
+        i = index
+        index += 1
         lock.release()
-        id = 'tt{:07d}'.format(i)
-        # if (i+w_id)%100==0:
-        #     print('sleeping')
-        #     time.sleep(np.random.randint(5,6))
-        time.sleep(random.uniform(0,0.5))
+        id = ids[i]
+        time.sleep(random.uniform(0.5,1))
         try:
             plot = get_plot(id)
             if plot:
@@ -51,7 +52,7 @@ class MovieDB(object):
         path = '/media/qwertyflagstop/data/{}.h5'.format(self.name)
         self.file = File(path, mode='a')
 
-    def download_songs_from_list_in_file(self, file_name, num_workers = 8):
+    def download_songs_from_list_in_file(self, file_name, num_workers = 10):
         """
 
             :param file_name: the name of file with IMDB ids
@@ -62,10 +63,13 @@ class MovieDB(object):
         global index
         global tt_index
         with open(file_name, 'r') as fp:
-            ids = json.load(fp)
+            ids = set(json.load(fp))
         tt_index = 75000
         for k in self.file.keys(): #remove any we already got
             tt_index = max(tt_index,int(k[2:]))
+            if k in ids:
+                ids.remove(k)
+        ids = list(ids)
         worker_count = num_workers
         index = 0
         queue = Queue()
@@ -83,13 +87,32 @@ class MovieDB(object):
                 self.file.create_dataset('{}/poster'.format(s['id']), data=poster_bytes)
                 self.file.create_dataset('{}/plot'.format(s['id']), data=plot)
                 self.file.flush()
-                exit()
             except:
                 continue
         print('DONE!')
         self.file.flush()
         self.file.close()
 
+    def view_random__images(self):
+        ids = self.file.keys()
+        lengths = []
+        chars = set()
+        import string
+        master_txt = open('plots.txt','w')
+        for i in np.arange(0,len(ids)):
+            movie_facts = np.array(self.file['{}/{}'.format(ids[i],'plot')]).tostring()
+            movie_facts = json.loads(movie_facts)
+            l = movie_facts['Plot']
+            p = ''.join([x for x in l if x in string.printable])
+            p = p.replace('\n',' ')
+            master_txt.write(p)
+            master_txt.write('\n')
+            # image_bytes = np.array(self.file['{}/{}'.format(ids[j],'poster')])
+            # v = Image.open(BytesIO(image_bytes.tostring()))
+            # v.save('{}_.jpg'.format(i))
+        master_txt.close()
+
 if __name__ == '__main__':
     db = MovieDB('movies')
-    db.download_songs_from_list_in_file('movie_ids.json')
+    #db.download_songs_from_list_in_file('movie_ids.json')
+    db.view_random__images()
