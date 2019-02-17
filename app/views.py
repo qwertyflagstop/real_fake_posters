@@ -4,7 +4,10 @@ Entry point for web app
 """
 from flask import (request, render_template, flash,
                    send_from_directory, abort)
-from . import APP
+from . import APP, rnn
+import sys
+sys.path.append("..")
+import models2
 
 DEFAULT_PLOT = "Once upon a time... there was a lad"
 
@@ -38,9 +41,8 @@ def index():
         return default_page()
     
     level = request.form['range']
-
-    print(level)
-    plot = "temp"
+    level = float(level / 100.0)
+    plot = rnn.get_a_plot(level)
     return render_template('index.html', plot=plot)
 
 
