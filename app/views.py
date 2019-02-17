@@ -2,20 +2,12 @@
 """
 Entry point for web app
 """
-import os
-import base64
 from flask import (request, render_template, flash,
                    send_from_directory, abort)
-from werkzeug.utils import secure_filename
-from . import APP, ALLOWED_EXTENSIONS
+from . import APP
 
-DEFAULT_TITLE = "Your Title Here"
 DEFAULT_PLOT = "Once upon a time... there was a lad"
 
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @APP.route('/static/js/<path:path>')
 def send_js(path):
@@ -45,32 +37,12 @@ def index():
     if request.method == 'GET':
         return default_page()
     
-    if 'file' not in request.files:
-        flash('No file part')
-        return default_page()
+    level = request.form['range']
 
-    file = request.files['file']
-
-    if not allowed_file(file.filename):
-        flash('Extension not allowed')
-        return default_page()
-
-    #filename = secure_filename(file.filename)
-    #file.save(os.path.join(APP.config['UPLOAD_FOLDER'], filename))
-    file.seek(0)
-    file_raw = file.read()
-    title, plot = generate_plot_and_title(file_raw)
-    base64_file = base64.b64encode(file_raw)
-    return render_template('index.html', title=title, plot=plot, img_data=base64_file.decode())
+    print(level)
+    plot = "temp"
+    return render_template('index.html', plot=plot)
 
 
 def default_page():
-    return render_template('index.html', title=DEFAULT_TITLE, plot=DEFAULT_PLOT)
-
-
-def generate_plot_and_title(file_raw):
-
-    # do network stuff
-
-    # replace these values with the generated ones
-    return DEFAULT_TITLE, DEFAULT_PLOT
+    return render_template('index.html', plot=DEFAULT_PLOT)

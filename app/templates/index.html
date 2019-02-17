@@ -8,58 +8,60 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Real Fake Posters</title>
+  <title>Real Fake Plots</title>
 
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
 
   <link href="/static/css/main.css" rel="stylesheet">
+  <link href="/static/css/rangerslider.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script>
-    function fileUpload() {
-      document.getElementById("file").click();
-    };
-  </script>
-  <script src="/static/js/main.js"></script>
+  <script src="/static/js/rangerslider.js"></script>
 </head>
 
 <body>
   <header>
-    <p>Upload an image and get its movie title and plot!</p>
+    <p>Generate a crazy plot!</p>
   </header>
   <div class="row main-row">
-      <div class="column">
-          <img id="poster" src="data:image/jpg;base64,{{img_data}}" onerror="this.src='/static/img/default.jpeg'"/>
-          <form id="newImage" action="/" method="POST" enctype="multipart/form-data">
-            <input type="file" id="file" name="file" style="display:none;" />
-          </form>
-          <div id="button-container">
-            <button onclick="fileUpload();">Upload</button>
-          </div>
-      </div>
-      <div class="column">
-        <div class="row">
-          <div class="column-small">
-            <p class="bold">Title:</p>
-          </div>
-          <div class="column-big">
-            <p>{{title}}</p>
-          </div>
-        </div>
-        <div class="row">
-            <div class="column-small">
-              <p class="bold">Plot:</p>
-            </div>
-            <div class="column-big">
-              <p>{{plot}}</p>
-            </div>
-          </div>
-      </div>
+    <div class="column-small">
+      <p class="bold">Plot:</p>
+    </div>
+    <div class="column-big">
+      <p>{{plot}}</p>
+    </div>
+  </div>
+  <div class="row">
+    <p class="bold">Craziness level</p>
+  </div>
+  <div class="row">
+    <form id="form" action="/" method="POST">
+      <input type="range" name="range" list="tickmarks">
+
+      <datalist id="tickmarks">
+        <option value="0" label="0%">
+        <option value="10">
+        <option value="20">
+        <option value="30">
+        <option value="40">
+        <option value="50" label="50%">
+        <option value="60">
+        <option value="70">
+        <option value="80">
+        <option value="90">
+        <option value="100" label="100%">
+      </datalist>
+    </form>
+  </div>
+  <div class="row">
+    <div id="button-container">
+      <button onclick="document.getElementById('form').submit();">Generate</button>
+    </div>
   </div>
   
   <footer>
-      <p>&copy; Real Fake Posters 2019. All Rights Reserved.</p>
+      <p>&copy; Real Fake Plots 2019. All Rights Reserved.</p>
   </footer>
 
 </body>
